@@ -1,0 +1,29 @@
+GaussSeidel[A0_, b0_, X0_, maxtier_] := 
+  Module[{A = N[A0], b = N[b0], xk = X0, xk1, i, j, k = 0, n, m, 
+    OutputDetails}, size = Dimensions[A];
+   n = size[[1]];
+   m = size[[2]];
+   If[n != m, 
+    Print["Not a square matrix, cannot proceed with Gauss se method"];
+    Return[]];
+   OutputDetails = {xk};
+   xk1 = Table[0, {n}];
+   While[k < maxtier, 
+    For[i = 1, i <= n, i++, 
+     xk1[[i]] = (1/A[[i, i]])*(b[[i]] - 
+         Sum[A[[i, j]]*xk[[j]], {j, 1, i - 1}] - 
+         Sum[A[[i, j]]*xk[[j]], {j, i + 1, n}])];
+    k++;
+    OutputDetails = Append[OutputDetails, xk1];
+    xk = xk1;];
+   colHeading = Table[X[s], {s, 1, n}];
+   Print[
+    NumberForm[
+     TableForm[OutputDetails, TableHeadings -> {None, colHeading}], 6]];
+   Print["No. of iterations performed = ", maxiter];];
+
+A = {{2, -1, 0}, {-1, 2, -1}, {0, -1, 2}};
+b = {7, 1, 1};
+X0 = {0, 0, 0};
+
+GaussJacobi[A, b, X0, 15]
